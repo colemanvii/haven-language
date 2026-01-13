@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Haven Language</title>
+  <meta name="description" content="A universal, grounded language for clear human coordination." />
+
+  <style>
+    :root{
+      --bg:#070a0f;
+      --panel:#0b0f14;
+      --ink:#e8edf5;
+      --muted:#a6b2c3;
+      --faint:#5d6b80;
+      --line:rgba(232,237,245,.10);
+      --line2:rgba(232,237,245,.06);
+      --accent:#9fe7c4;   /* lab green */
+      --accent2:#ffb26b;  /* tangerine whisper */
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius:16px;
+      --radius2:22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --max: 1080px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 900px at 12% 5%, rgba(159,231,196,.10), transparent 55%),
+        radial-gradient(900px 700px at 88% 8%, rgba(255,178,107,.08), transparent 60%),
+        radial-gradient(900px 700px at 50% 85%, rgba(159,231,196,.06), transparent 60%),
+        linear-gradient(180deg, #05070b 0%, var(--bg) 40%, #05070b 100%);
+      color:var(--ink);
+      font-family:var(--sans);
+      letter-spacing:.2px;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 20px 80px;}
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(7,10,15,.92), rgba(7,10,15,.55));
+      border-bottom:1px solid var(--line2);
+    }
+    .topbar .inner{
+      max-width:var(--max); margin:0 auto;
+      padding:14px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width: 220px;
+    }
+    .mark{
+      width:26px; height:26px; border-radius:8px;
+      background:
+        linear-gradient(135deg, rgba(159,231,196,.95), rgba(255,178,107,.55));
+      box-shadow: 0 0 0 1px rgba(232,237,245,.12) inset, 0 12px 24px rgba(0,0,0,.28);
+    }
+    .brand .name{font-weight:650; letter-spacing:.4px}
+    .brand .sub{font-family:var(--mono); color:var(--muted); font-size:12px}
+    nav{
+      display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      font-family:var(--mono);
+      font-size:12px; color:var(--muted);
+      padding:7px 10px; border-radius:10px;
+      border:1px solid transparent;
+    }
+    nav a:hover{border-color:var(--line); color:var(--ink); background:rgba(232,237,245,.03)}
+    .cta{
+      display:flex; gap:10px; align-items:center;
+    }
+    .btn{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(232,237,245,.03);
+      color:var(--ink);
+      box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn:hover{border-color:rgba(159,231,196,.35); background:rgba(159,231,196,.06)}
+    .btn.primary{
+      border-color:rgba(159,231,196,.35);
+      background:linear-gradient(180deg, rgba(159,231,196,.14), rgba(232,237,245,.02));
+    }
+
+    header{
+      padding:46px 0 18px;
+    }
+    .kicker{
+      font-family:var(--mono);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:1.6px;
+      text-transform:uppercase;
+      display:flex; align-items:center; gap:10px;
+    }
+    .kicker .dot{
+      width:7px; height:7px; border-radius:999px; background:var(--accent);
+      box-shadow: 0 0 0 5px rgba(159,231,196,.08);
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size: clamp(34px, 4.8vw, 56px);
+      line-height:1.02;
+      letter-spacing:-.6px;
+      font-weight:700;
+    }
+    .lede{
+      margin:0;
+      max-width: 70ch;
+      color:var(--muted);
+      font-size: 16px;
+      line-height:1.7;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      margin-top:24px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .brand{min-width:auto}
+      nav{display:none}
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(232,237,245,.03), rgba(232,237,245,.015));
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      padding:18px;
+      box-shadow: var(--shadow);
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:14px;
+      font-family:var(--mono);
+      color:var(--ink);
+      font-weight:650;
+      letter-spacing:.2px;
+    }
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:14px;
+    }
+    .spec{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      border-top:1px solid var(--line2);
+      margin-top:14px;
+      padding-top:12px;
+      display:grid;
+      gap:8px;
+    }
+    .spec .row{display:flex; justify-content:space-between; gap:12px}
+    .spec .k{color:var(--faint)}
+    .pillrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+    .pill{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(232,237,245,.02);
+      color:var(--muted);
+    }
+
+    section{margin-top:18px}
+    .sectionTitle{
+      display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+      padding:10px 2px 12px;
+    }
+    .sectionTitle h3{
+      margin:0;
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+    .sectionTitle .rule{
+      flex:1;
+      height:1px;
+      background: linear-gradient(90deg, var(--line2), transparent);
+      margin-left:12px;
+    }
+
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+    }
+    @media (max-width: 900px){ .two{grid-template-columns:1fr} }
+
+    .list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+    .list li{margin:8px 0}
+    .quote{
+      border-left:2px solid rgba(159,231,196,.35);
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(159,231,196,.05);
+      margin-top:12px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+    .quote b{color:var(--ink)}
+    .mono{font-family:var(--mono)}
+    .examples pre{
+      margin:12px 0 0;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      overflow:auto;
+      color:rgba(232,237,245,.88);
+      font-family:var(--mono);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .footer{
+      margin-top:34px;
+      padding-top:20px;
+      border-top:1px solid var(--line2);
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      color:var(--faint);
+      font-family:var(--mono);
+      font-size:12px;
+    }
+    .inputRow{
+      display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;
+    }
+    input{
+      flex:1;
+      min-width: 220px;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      outline:none;
+      font-family:var(--mono);
+      font-size:12px;
+    }
+    input:focus{border-color:rgba(159,231,196,.35); box-shadow:0 0 0 5px rgba(159,231,196,.08)}
+    .tiny{
+      margin-top:10px;
+      color:var(--faint);
+      font-size:12px;
+      line-height:1.6;
+      font-family:var(--mono);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="#top" aria-label="Haven Language home">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <div class="name">Haven Language</div>
+          <div class="sub">A grounded interface for meaning</div>
+        </div>
+      </a>
+
+      <nav aria-label="Site">
+        <a href="#manifesto">Manifesto</a>
+        <a href="#principles">Principles</a>
+        <a href="#spec">Spec</a>
+        <a href="#examples">Examples</a>
+        <a href="#institute">Institute</a>
+      </nav>
+
+      <div class="cta">
+        <button class="btn" id="copyLink">Copy link</button>
+        <a class="btn primary" href="#spec">Read the spec</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="top" class="wrap">
+    <header>
+      <div class="kicker"><span class="dot"></span> HAVEN LANGUAGE / V0</div>
+      <h1>Universal clarity without losing the human.</h1>
+      <p class="lede">
+        Haven Language is a small, precise vocabulary for communicating intent, state, and next action —
+        built for modern life where attention is scarce and meaning is often distorted.
+        It’s not “branding.” It’s an interface: <span class="mono">signal → shared understanding → clean action</span>.
+      </p>
+
+      <div class="grid">
+        <div class="card" id="manifesto">
+          <h2>Manifesto</h2>
+          <p>
+            Language is simplifying. People are tired of performance, ambiguity, and over-explaining.
+            The future belongs to grounded speech: short phrases that carry real intent, emotional honesty,
+            and operational clarity — without turning humans into robots.
+          </p>
+
+          <div class="quote">
+            <b>Haven Language</b> aims to become a “basic human” standard:
+            minimal words, maximal usefulness — a calm way to coordinate life, work, and inner state.
+          </div>
+
+          <div class="pillrow" aria-label="Core tags">
+            <span class="pill">grounded</span>
+            <span class="pill">minimal</span>
+            <span class="pill">operational</span>
+            <span class="pill">human spark</span>
+            <span class="pill">presence</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Quick Start</h2>
+          <p>
+            Use Haven Language in three places: (1) daily briefings, (2) collaboration, (3) self-checks.
+            The goal is not poetry — it’s <span class="mono">clean alignment</span>.
+          </p>
+
+          <div class="spec" role="list">
+            <div class="row" role="listitem"><span class="k">Format</span><span>Short + exact</span></div>
+            <div class="row" role="listitem"><span class="k">Tone</span><span>Calm authority</span></div>
+            <div class="row" role="listitem"><span class="k">Default</span><span>Truthful + kind</span></div>
+            <div class="row" role="listitem"><span class="k">Test</span><span>Does it reduce confusion?</span></div>
+          </div>
+
+          <div class="inputRow" style="margin-top:14px">
+            <a class="btn primary" href="#examples">See examples</a>
+            <a class="btn" href="#institute">Connect to Haven Institute</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="principles">
+      <div class="sectionTitle">
+        <h3>Principles</h3><div class="rule"></div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <h2>1) Orientation over expression</h2>
+          <p>We speak to locate reality: what’s true, what matters, what’s next.</p>
+          <ul class="list">
+            <li><span class="mono">WIN</span> = What’s Important Now.</li>
+            <li>State before strategy: “where am I?” precedes “what should I do?”</li>
+            <li>Words exist to reduce drift.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>2) Signal, not spectacle</h2>
+          <p>Short language that carries weight. No performance. No fog.</p>
+          <ul class="list">
+            <li>Fewer adjectives. More clarity.</li>
+            <li>One sentence can carry an entire decision if it’s true.</li>
+            <li>Quiet authority beats loud persuasion.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>3) Human spark preserved</h2>
+          <p>Institutional doesn’t mean sterile. It means stable.</p>
+          <ul class="list">
+            <li>Warmth is allowed — but it must be clean.</li>
+            <li>Emotion becomes useful when named plainly.</li>
+            <li>“Soft edges, hard truth.”</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>4) Minimal vocabulary, maximal leverage</h2>
+          <p>A small set of phrases you can reuse forever.</p>
+          <ul class="list">
+            <li>Ritual phrases become infrastructure.</li>
+            <li>Standards beat inspiration when life gets noisy.</li>
+            <li>Language is a tool of alignment.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="spec">
+      <div class="sectionTitle">
+        <h3>Spec</h3><div class="rule"></div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <h2>Core sentence pattern</h2>
+          <p>
+            Haven Language prefers a simple structure:
+            <span class="mono">State → Intent → Next step</span>.
+          </p>
+
+          <div class="examples">
+            <pre>
+STATE:  "I feel clear / scattered / tender / restless."
+INTENT: "I want alignment / rest / momentum / truth."
+NEXT:   "Next step: 25 minutes on X. Then stop."</pre>
+          </div>
+
+          <div class="quote">
+            <b>Rule:</b> If it can’t be acted on (or rested into), it’s not finished language yet.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Canonical phrases (v0)</h2>
+          <p>These are “known good” sentences — portable and reliable.</p>
+          <ul class="list">
+            <li><span class="mono">WIN:</span> What’s Important Now.</li>
+            <li><span class="mono">Ignition → Glide → Create.</span></li>
+            <li><span class="mono">Rest protects wattage.</span></li>
+            <li><span class="mono">I do not chase. I receive.</span></li>
+            <li><span class="mono">Clarity without contempt.</span></li>
+            <li><span class="mono">Say it clean. Do it slow.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="examples">
+      <div class="sectionTitle">
+        <h3>Examples</h3><div class="rule"></div>
+      </div>
+
+      <div class="two">
+        <div class="card examples">
+          <h2>Daily briefing (personal)</h2>
+          <p>Short. True. Operational.</p>
+          <pre>
+STATE:  Clear. Steady wattage.
+WIN:    Ship one artifact.
+NEXT:   30 minutes: build + publish.
+RULE:   Stop while the ember is clean.</pre>
+        </div>
+
+        <div class="card examples">
+          <h2>Collaboration (team)</h2>
+          <p>Coordinates without drama.</p>
+          <pre>
+STATE:  We have ambiguity on scope.
+INTENT: Protect quality + timeline.
+NEXT:   1) Decide spec by 2pm.
+        2) Assign owner.
+        3) Define "done" in one line.</pre>
+        </div>
+
+        <div class="card examples">
+          <h2>Conflict repair</h2>
+          <p>Truthful + kind. No performance.</p>
+          <pre>
+TRUTH:  I missed the mark here.
+IMPACT: It created confusion.
+INTENT: I want clean trust.
+NEXT:   Here's the fix + the date.</pre>
+        </div>
+
+        <div class="card examples">
+          <h2>Inner-signal check</h2>
+          <p>Basic Human Language version.</p>
+          <pre>
+BODY:   Tight chest / open breath?
+MIND:   Racing / quiet?
+TRUTH:  What do I already know?
+NEXT:   One small act that matches truth.</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="institute">
+      <div class="sectionTitle">
+        <h3>Haven Institute</h3><div class="rule"></div>
+      </div>
+
+      <div class="two">
+        <div class="card">
+          <h2>How it connects</h2>
+          <p>
+            Haven Language is the communications layer for the broader Haven work:
+            it standardizes how we describe inner state, priorities, collaboration, and meaning —
+            so the rest of the system can stay humane and coherent.
+          </p>
+          <ul class="list">
+            <li><span class="mono">Haven Institute:</span> teaching, research, curriculum.</li>
+            <li><span class="mono">Haven Systems:</span> dashboards, rituals, workflows.</li>
+            <li><span class="mono">Haven Language:</span> the shared vocabulary underneath it all.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>Subscribe / contact (placeholder)</h2>
+          <p>
+            If you want, this can point to Substack, a simple email form, or a waitlist.
+            For now it’s a clean placeholder.
+          </p>
+
+          <div class="inputRow">
+            <input id="email" type="email" placeholder="email (optional)" autocomplete="email" />
+            <button class="btn primary" id="interestBtn">Raise interest</button>
+          </div>
+
+          <div class="tiny" id="tinyNote">
+            No data is stored. This button just generates a copyable note for now.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>© <span id="year"></span> Haven Language</div>
+      <div class="mono">v0 / calm institutional draft</div>
+      <div class="mono"><a href="#top">Back to top</a></div>
+    </div>
+  </main>
+
+  <script>
+    // small, quiet behaviors
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("copyLink").addEventListener("click", async () => {
+      const url = window.location.href.split("#")[0] + "#spec";
+      try {
+        await navigator.clipboard.writeText(url);
+        const btn = document.getElementById("copyLink");
+        const prev = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(()=> btn.textContent = prev, 900);
+      } catch (e) {
+        alert("Copy failed. You can manually copy the URL.");
+      }
+    });
+
+    document.getElementById("interestBtn").addEventListener("click", async () => {
+      const email = (document.getElementById("email").value || "").trim();
+      const note =
+`HAVEN LANGUAGE — INTEREST
+Email: ${email || "(not provided)"}
+Timestamp: ${new Date().toISOString()}
+Message: I'm interested in Haven Language. Please share the repo + spec updates.`;
+      try{
+        await navigator.clipboard.writeText(note);
+        const tiny = document.getElementById("tinyNote");
+        tiny.textContent = "Copied an interest note to clipboard.";
+        setTimeout(()=> tiny.textContent = "No data is stored. This button just generates a copyable note for now.", 1400);
+      }catch(e){
+        alert(note);
+      }
+    });
+  </script>
+</body>
+</html>
